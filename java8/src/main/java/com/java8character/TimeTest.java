@@ -1,8 +1,8 @@
 package com.java8character;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class TimeTest {
 
@@ -12,6 +12,7 @@ public class TimeTest {
             LocalTime  创建时间
             LocalDateTime  创建日期和时间
 
+            现在的数据库也已经支持这些数据类型了
          */
 
         //创建时间 1
@@ -49,10 +50,8 @@ public class TimeTest {
         withMonth,
         withYear
         ****
-        将月份天数、年份天数、月份、年 份 修 改 为 指 定 的 值 并 返 回 新 的
-        LocalDate 对象
+        将月份天数、年份天数、月份年份修改为指定的值并返回新的 LocalDate 对象
          */
-
         LocalDateTime localDateTime2 = now.withYear(2010);
         System.out.println(localDateTime2);
 
@@ -62,6 +61,90 @@ public class TimeTest {
         boolean before = now.isBefore(localDateTime2);
         System.out.println(before);
 
+        /*
+        总结:
+            LocalDate LocalTime LocalDateTime  获取的时间都是北京时间不用增加偏移量
+         */
+
+
+
+
+
+
+        /*
+
+        时间戳 Instant (以Unix1970年1月1日0时0分0秒 到现在的毫秒值叫时间戳)
+
+         */
+
+        //默认是utc时区与北京时间查了8个小时
+        Instant instant = Instant.now();
+        System.out.println("默认是utc时区 instant = " + instant);
+        //获取时间戳的话就不用加偏移量
+        System.out.println(instant.toEpochMilli());
+        System.out.println(new Date().getTime());
+        //如果要算北京时间需要加8个小时的偏移量
+        LocalDateTime localDateTime4 = instant.atOffset(ZoneOffset.ofHours(8)).toLocalDateTime();
+        System.out.println("北京时间,时间戳"+localDateTime4);
+
+
+
+
+
+        /*
+            将LocalDate LocalTime LocalDateTime 转换成时间戳
+         */
+
+        //获取秒数 //可以直接获取秒然后再增加8个时区的偏移量
+        long second = LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
+        System.out.println("获取当前秒数---second = " + second);
+        //获取毫秒数 用toInstant()方法转换成时间戳之后再增加8个时区的偏移量
+        long Milli = LocalDateTime.now().toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+        System.out.println("获取当前时间戳----Milli = " + Milli);
+
+
+        /*
+            将时间戳转时间
+         */
+
+        LocalDateTime offsetDateTime = Instant.now().atOffset(ZoneOffset.ofHours(8)).toLocalDateTime();
+        System.out.println("offsetDateTime = " + offsetDateTime);
+
+
+
+        /*
+            字符串时间戳转时间
+         */
+        Instant instant1 = Instant.ofEpochMilli(new Date().getTime());
+        LocalDateTime localDateTime3 = instant1.atOffset(ZoneOffset.ofHours(8)).toLocalDateTime();
+        System.out.println("localDateTime3 = " + localDateTime3);
+
+
+        /*
+            LocalDateTime与String 互相转化
+         */
+
+        // LocalDateTime与String
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
+        String format = LocalDateTime.now().format(dateTimeFormatter);
+        System.out.println("当前时间-format = " + format);
+
+        //String 转LocalDateTime
+        String localTime = "2019-10-12 16:50:22 222";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
+        LocalDateTime parse = LocalDateTime.parse(localTime, formatter);
+        System.out.println("字符转时间-parse = " + parse);
+
+        /*
+            Date 与 LocalDateTime 互相转化
+         */
+
+        Date date = new Date();
+        LocalDateTime localDateTime5 = date.toInstant().atOffset(ZoneOffset.ofHours(8)).toLocalDateTime();
+        System.out.println("localDateTime5 = " + localDateTime5);
+
+        Date from = Date.from(LocalDateTime.now().toInstant(ZoneOffset.ofHours(8)));
+        System.out.println("from = " + from);
 
 
     }
