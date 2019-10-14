@@ -2,6 +2,7 @@ package com.java8character;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 public class TimeTest {
@@ -168,6 +169,34 @@ public class TimeTest {
         Period between1 = Period.between(now6, now7);
         long l1 = between1.toTotalMonths();
         System.out.println("l1 = " + l1);
+
+        /*
+            时间调节器 temporalAdjuster
+         */
+
+        LocalDateTime lt = LocalDateTime.now();
+        System.out.println("lt = " + lt);
+
+        //指定是哪一天
+        LocalDateTime localDateTime6 = lt.withDayOfMonth(9);
+        System.out.println("localDateTime6 = " + localDateTime6);
+        LocalDateTime with = lt.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+        System.out.println("with = " + with);
+
+        //自定义下一个工作日
+        LocalDateTime with1 = lt.with(t -> {
+            LocalDateTime local = (LocalDateTime) t;
+            DayOfWeek dayOfWeek = local.getDayOfWeek();
+            if (DayOfWeek.FRIDAY.equals(dayOfWeek)) {
+                return local.plusDays(3);
+            } else if (DayOfWeek.SATURDAY.equals(dayOfWeek)) {
+                return local.plusDays(2);
+            } else {
+                return local.plusDays(1);
+            }
+        });
+
+        System.out.println("with1 = " + with1);
 
     }
 
