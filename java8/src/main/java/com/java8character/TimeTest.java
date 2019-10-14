@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class TimeTest {
 
-    public static void tsetTime() {
+    public static void tsetTime() throws InterruptedException {
         /*
             LocalDate  创建日期
             LocalTime  创建时间
@@ -146,10 +146,32 @@ public class TimeTest {
         Date from = Date.from(LocalDateTime.now().toInstant(ZoneOffset.ofHours(8)));
         System.out.println("from = " + from);
 
+        /*
+            Duration 计算两个"时间"之间的间隔,
+            Period 计算俩个"日期"之间的间隔,
+         */
+
+        Instant now3 = Instant.now();
+        Thread.sleep(1000);
+        Instant now4 = Instant.now();
+        Duration between = Duration.between(now3,now4);
+        long l = between.toMillis();
+        System.out.println("l = " + l);
+        //一样适用
+        LocalDateTime now5 = LocalDateTime.now();
+        System.out.println("-------------------");
+
+        //因为是日期不是最少单位是天,,没有毫秒值
+        LocalDate now6 = LocalDate.now();
+        Thread.sleep(1000);
+        LocalDate now7 = LocalDate.now();
+        Period between1 = Period.between(now6, now7);
+        long l1 = between1.toTotalMonths();
+        System.out.println("l1 = " + l1);
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         tsetTime();
 
     }
